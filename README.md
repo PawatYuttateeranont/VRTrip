@@ -1,21 +1,3 @@
-# Node.js Loginapp
+# VRTrip App
 
-This is a user login and registration app using Node.js, Express, Passport and Mongoose. It is part of the YouTube series [here](https://www.youtube.com/watch?v=Z1ktxiqyiLA)
-
-### Version
-1.1.0
-
-### Usage
-
-
-### Installation
-
-Loginapp requires [Node.js](https://nodejs.org/) v4+ to run.
-
-```sh
-$ npm install
-```
-
-```sh
-$ npm start
-```
+This project is about developing a system for virtual field trip study using VR technology. Cost of a real field trip is quite high or some places are hard to go. It is possible to have an accident during a real field trip. We have developed a system for virtual field trip study using VR technology to solve these problems. The system uses virtual reality technology that can display 360-degree images on a smartphone application. There are also assessment systems to assess learners through a website. There are three types of questions: fill in the words, choices, and photo taking of important spots. With this system, it makes the students feel like going on real field trips. The system reduces travel time and costs in organizing a field trip, and provides knowledge and new experiences. As part of the project, we also developed two exemplary field trips, PTT Green in the City and Rattanakosin Island.
