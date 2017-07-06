@@ -1,0 +1,134 @@
+<div ng-app="addPage" ng-controller="addCtrl">
+
+    <h2 class="page-header">Add Trip</h2>
+    
+    <form method="post" action="/users/addTrip">
+    	<div class="form-group">
+        	<label>Trip</label>
+        	<input type="text" class="form-control" placeholder="Trip Name" name="name"><br>
+            <label>Thumbnail</label>
+            <input type="text" class="form-control" placeholder="Path of Thumbnail" name="imgThumbnail"><br>
+            <label>Overview</label>
+            <textarea type="text" class="form-control" rows="5" placeholder="Overview Description" name="overview"></textarea><br>
+            <label>Place of Trip</label>
+            <select class="form-control" ng-model="placeDestination">
+            	<option ng-repeat="place in places" value="[[place.nameUrl]]">[[place.name]]</option>
+            </select><br>
+            <input type="text" class="form-control" name="place" ng-hide="true" value="[[placeDestination]]">
+        </div>
+        <div class="page-header"></div>
+        <!-- Assignment Section -->
+        <!-- Fill Question -->
+        <div class="form-group">
+            <label>Fill</label>
+            <input type="text" class="form-control" placeholder="Question" ng-model="fillQuestion"><br>
+            <input type="text" class="form-control" placeholder="Answer" ng-model="fillAnswer"><br>
+            <a class="btn btn-default" ng-click="addFill()">+</a>
+
+            <div class="card card-success" style="color:white; padding: 1em 1em .5em 1em; margin: 2em;" ng-repeat="f in fills">
+                <p><b>Question : </b> <i>[[f.question]]</i></p>
+                <p><b>Answer : </b> <i>[[f.answer]]</i></p>
+            </div>
+        </div>
+        <div class="page-header"></div>
+        <!-- Choice Question -->
+        <div class="form-group">
+            <label>Choice</label>
+            <input type="text" class="form-control" placeholder="Question" ng-model="choiceQuestion"><br>
+            <div class="input-group" style="margin: .5em 3em .5em;">
+                <span class="input-group-addon">
+                    <input type="checkbox" ng-model="choiceAnswerArray[0]">
+                </span>
+                <input type="text" class="form-control" placeholder="Option 1" ng-model="choiceOptions[0]">
+            </div>
+            <div class="input-group" style="margin: .5em 3em .5em;">
+                <span class="input-group-addon">
+                    <input type="checkbox" ng-model="choiceAnswerArray[1]">
+                </span>
+                <input type="text" class="form-control" placeholder="Option 2" ng-model="choiceOptions[1]">
+            </div>
+            <div class="input-group" style="margin: .5em 3em .5em;">
+                <span class="input-group-addon">
+                    <input type="checkbox" ng-model="choiceAnswerArray[2]">
+                </span>
+                <input type="text" class="form-control" placeholder="Option 3" ng-model="choiceOptions[2]">
+            </div>
+            <div class="input-group" style="margin: .5em 3em .5em;">
+                <span class="input-group-addon">
+                    <input type="checkbox" ng-model="choiceAnswerArray[3]">
+                </span>
+                <input type="text" class="form-control" placeholder="Option 4" ng-model="choiceOptions[3]">
+            </div><br>
+            <a class="btn btn-default" ng-click="addChoice()">+</a>
+
+            <div class="card card-success" style="color:white; padding: 1em 1em .5em 1em; margin: 2em;" ng-repeat="c in choices">
+                <p><b>Question : </b><i>[[c.question]]</i></p>
+                <p><b>Options : </b></p>
+                <div ng-repeat="option in c.options">
+                    <p>- [[option]]</p>
+                </div>
+                <p><b>Answer : </b><i>[[c.answer+1]]</i></p>
+            </div>
+        </div>
+      	<button type="submit" class="btn btn-primary btn-block" ng-click="addAssignment()">Add</button>
+    </form>
+
+</div>
+
+
+<script>
+    var app = angular.module('addPage', []);
+
+    app.config(function($interpolateProvider) {
+        $interpolateProvider.startSymbol('[[');
+        $interpolateProvider.endSymbol(']]');
+    });
+
+    app.controller("addCtrl",function($scope,$http){
+
+        $scope.placeDestination = null;
+
+        $scope.fills = [];
+        $scope.choices = [];
+
+        $scope.fillQuestion = null;
+        $scope.fillAnswer = null;
+
+        $scope.choiceQuestion = null;
+        $scope.choiceOptions = [];
+        // Keep in Array
+        $scope.choiceAnswerArray = [false, false, false, false];
+
+
+        // GET DATA OF THIS TRIP
+        $http.get('/users/data/place').then(function(response){
+            $scope.places = response.data;
+        });
+
+        $scope.addFill = function() {
+            $scope.fills.push({
+                "question":$scope.fillQuestion,
+                "answer":$scope.fillAnswer
+            });
+        };
+
+        $scope.addChoice = function() {
+            $scope.choices.push({
+                "question":$scope.choiceQuestion,
+                "options":$scope.choiceOptions,
+                "answer":$scope.choiceAnswerArray.indexOf(true)
+            });
+        };
+
+        $scope.addAssignment = function() {
+            var data = {"fills":$scope.fills,
+                        "choices":$scope.choices };
+            $http.post('/users/addTrip', data).then(function(response){
+                console.log('SUBMITED ASSIGNMENTS');
+            });
+        };
+
+
+        
+    });
+</script>

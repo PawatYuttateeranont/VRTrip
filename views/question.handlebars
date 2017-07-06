@@ -1,0 +1,105 @@
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+
+<h2 class="page-header">Question</h2>
+<div ng-app="displayQuestion" ng-controller="questionCtrl">
+	<div class="quiz-area" ng-show="inProgress">
+		<div ng-show="!quizOver">
+			<h2 id="question">[[question]]</h2>
+			<ul id="options">
+				<li ng-repeat="option in options">
+					<label>
+						<input type="radio" name="answer" value="[[option]]">
+						[[option]]
+					</label>
+				</li>
+			</ul>
+			<button ng-click="checkAnswer(); nextQuestion()" ng-show="answerMode">Submit</button>
+	
+			<!-- <div ng-show="!answerMode">
+				<button ng-click="nextQuestion()" class="next-question">Next</button>
+				<span ng-show="correctAns">That is correct!</span>
+				<span ng-show="!correctAns">Sorry, that is an incorrect answer.</span>
+			</div> -->
+		</div>
+	
+		<div ng-show="quizOver">
+			<h2>Quiz is over</h2>
+			<span>Your Score is [[score]]</span><br>
+			<button ng-click="reset()">Submit Score</button>
+		</div>
+	
+		<!-- <div id="score">
+			Score: [[score]]
+		</div> -->
+	</div>
+	
+	<div class="intro" ng-show="!inProgress">
+		<p>Welcome to the QuizApp</p>
+		<button id="startQuiz" ng-click="start()">Start the Quiz</button>
+	</div>
+</div>	
+
+<script>
+	var app = angular.module("displayQuestion", []); 
+
+	app.config(function($interpolateProvider) {
+    	$interpolateProvider.startSymbol('[[');
+    	$interpolateProvider.endSymbol(']]');
+  	});
+
+	app.controller("questionCtrl", function($scope, $http) {
+   		// GET all question from database
+    	$http.get('/users/question_data').then(function(response){
+			$scope.question_data = response.data;
+			$scope.question_data_length = response.data.length;
+		});
+
+   		// GEN Quiz
+		$scope.start = function() {
+			$scope.id = 0;
+			$scope.quizOver = false;
+			$scope.inProgress = true;
+			$scope.getQuestion();
+		};
+		$scope.reset = function() {
+			var data = {"score" : $scope.score};
+			$http.post('/users/question', data).then(function(response){
+				console.log('SUBMITED SCORE');
+			});
+			$scope.inProgress = false;
+			$scope.score = 0;
+		};
+		$scope.getQuestion = function() {
+			$http.get('/users/question_data').then(function(response){
+				if ($scope.id < response.data.length){
+					$scope.question = response.data[$scope.id].question;
+				 	$scope.options = response.data[$scope.id].options;
+					$scope.answer = response.data[$scope.id].answer;
+					$scope.answerMode = true;
+					console.log($scope.answer);
+				}
+				else {
+					$scope.quizOver = true;
+				}
+			});
+		};
+		$scope.checkAnswer = function() {
+			if(!$('input[name=answer]:checked').length) return;
+			var ans = $('input[name=answer]:checked').val();
+			if(ans == $scope.options[$scope.answer]) {
+				$scope.score++;
+				$scope.correctAns = true;
+			} else {
+				$scope.correctAns = false;
+			}
+			$scope.answerMode = false;
+		};
+		$scope.nextQuestion = function() {
+			$scope.id++;
+			$scope.getQuestion();
+		}
+		$scope.reset();
+	});
+</script>
+

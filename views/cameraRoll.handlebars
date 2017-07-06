@@ -1,0 +1,42 @@
+<div ng-app="display" ng-controller="displayCtrl">
+<input type="radio" name="username" value="{{username}}" ng-hide="true">
+
+    <h2 class="page-header">Camera Roll</h2>
+    <div class="row">
+        <div class="col-sm-4" ng-repeat="photo in photos.reverse()">
+            <div class="card">
+                <div class="card-img-top">
+                    <img ng-src="/img/[[photo]]" style="width: 100%;">
+                <div>
+            </div>
+        </div>
+    </div>
+
+    <br>
+
+</div>
+
+
+
+
+
+<script>
+    var app = angular.module("display", []); 
+
+
+    app.config(function($interpolateProvider) {
+        $interpolateProvider.startSymbol('[[');
+        $interpolateProvider.endSymbol(']]');
+    });
+
+    app.controller("displayCtrl", function($scope, $http) {
+
+        var username = $('input[name=username]').val();
+
+        $http.get('/users/data/photo/' + username).then(function(response){
+            $scope.photos = response.data[0].photos;
+            console.log($scope.photos);
+        });
+
+    });
+</script>

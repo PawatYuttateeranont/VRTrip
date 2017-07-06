@@ -1,0 +1,309 @@
+<div ng-app="mapPage" ng-controller="tripCtrl">
+     <!-- Pass Trip URL from Route to Angular -->
+    <input type="radio" name="tripUrl" value="{{tripUrl}}" ng-hide="true">
+     <input type="radio" name="username" value="{{user.username}}" ng-hide="true">
+    <!-- Pass Place URL from http.get to Angular -->
+    <!-- Now is not working -->
+    <!-- <input type="radio" name="placeUrl" value="[[place]]" ng-hide="true"> -->
+
+    <h2 class="page-header">[[name]]</h2>
+    <div class="alert alert-info" role="alert" ng-show="flashMessage">
+        <strong>Exploring!</strong> You're in [[currentScene]]
+    </div>
+    <div class="row">
+        <div class="col-sm-7">
+            <svg ng-click="draw($event)" width="636" height="540">
+                <image x="0" y="0" width="100%" height="100%" xlink:href="" ng-href="/img/[[imgMap]]"></image>
+                <g ng-repeat="mark in markers">
+                    <circle id="mark" ng-attr-cx="[[mark.x]]" ng-attr-cy="[[mark.y]]" ng-attr-r="[[mark.r]]" fill="#E91E63" ng-click="send([[mark.nameScene]], [[mark.imgScene]]);" ng-mouseover="showDesc=true" ng-mouseleave="showDesc=false"></circle>
+                    <rect x="0" y="0" fill="#E91E63" height="40" width="700" ng-show="showDesc"></rect>
+                    <text x="330" y="30" fill="white" text-anchor="middle" font-size="20" ng-show="showDesc">[[mark.name]]</text>                
+                </g>
+            </svg>
+        </div>
+    
+        <div class="col-sm-5"> 
+            <ul  class="nav nav-pills nav-justified" style="background: #3F51B5;">
+                <li class="nav-item active">
+                    <a  href="#info" data-toggle="tab" style="color: white;">Assignment</a>
+                </li>
+            </ul>
+            <div class="tab-content clearfix">
+                <div class="tab-pane active" id="info" style=" background: #F5F5F5; height: 500px; overflow-y: scroll">
+                    <div id="accordion" role="tablist" aria-multiselectable="true" ng-repeat="assignment in assignments">
+                        <div ng-switch="assignment.type">
+                            <!-- fill -->
+                            <div ng-switch-when="fill">
+                                <div class="card">
+                                    <div class="card-header" role="tab" id="heading_[[$index]]">
+                                        <h5 class="mb-[[$index]]">
+                                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse_[[$index]]" aria-expanded="true" aria-controls="collapse_[[$index]]">
+                                                Assignment [[$index+1]]
+                                            </a>
+                                            <span class="pull-right aria-hidden="true" ng-show="answers[$index].index==$index" style="color: #00C853;">
+                                                &#10004;
+                                            </span>
+                                        </h5>
+                                    </div>
+                                    <div id="collapse_[[$index]]" class="collapse" role="tabpanel" aria-labelledby="heading_[[$index]]">
+                                        <div class="card-block">
+                                            <p><b>Question : </b> <i>[[assignment.question]]</i></p>
+                                            <div class="input-group">
+                                                <!-- input with button -->
+                                                <input type="text" class="form-control" placeholder="Answer" ng-model="fillAnswer" style="margin: .5em 0em .5em;">
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-default" type="button" ng-click="addAnswer('fill', fillAnswer, $index)">Save</button>
+                                                </span>
+                                            </div>   
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- choice -->
+                            <div ng-switch-when="choice">
+                                <div class="card">
+                                    <div class="card-header" role="tab" id="heading_[[$index]]">
+                                        <h5 class="mb-[[$index]]">
+                                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse_[[$index]]" aria-expanded="true" aria-controls="collapse_[[$index]]">
+                                                Assignment [[$index+1]]                                            
+                                            </a>
+                                            <span class="pull-right aria-hidden="true" ng-show="answers[$index].index==$index" style="color: #00C853;">
+                                                &#10004;
+                                            </span>
+                                        </h5>
+                                    </div>
+                                    <div id="collapse_[[$index]]" class="collapse" role="tabpanel" aria-labelledby="heading_[[$index]]">
+                                        <div class="card-block">
+                                            <p><b>Question : </b> <i>[[assignment.question]]</i></p>
+                                            <div class="input-group" style="margin: .5em 0em .5em;">
+                                                <span class="input-group-addon card-primary">
+                                                    <input type="radio" ng-model="choiceAnswer" value="[[ assignment.options[0] ]]" name="choiceAnswer[[$index]]">
+                                                </span>
+                                                <input type="text" disabled class="form-control" ng-model="assignment.options[0]">
+                                            </div>
+                                            <div class="input-group" style="margin: .5em 0em .5em;">
+                                                <span class="input-group-addon card-primary">
+                                                    <input type="radio" ng-model="choiceAnswer" value="[[ assignment.options[1] ]]" name="choiceAnswer[[$index]]">
+                                                </span>
+                                                <input type="text" disabled class="form-control" ng-model="assignment.options[1]">
+                                            </div>
+                                            <div class="input-group" style="margin: .5em 0em .5em;">
+                                                <span class="input-group-addon card-primary">
+                                                    <input type="radio" ng-model="choiceAnswer" value="[[ assignment.options[2] ]]" name="choiceAnswer[[$index]]">
+                                                </span>
+                                                <input type="text" disabled class="form-control" ng-model="assignment.options[2]">
+                                            </div>
+                                            <div class="input-group" style="margin: .5em 0em .5em;">
+                                                <span class="input-group-addon card-primary">
+                                                    <input type="radio" ng-model="choiceAnswer" value="[[ assignment.options[3] ]]" name="choiceAnswer[[$index]]">
+                                                </span>
+                                                <input type="text" disabled class="form-control" ng-model="assignment.options[3]">
+                                            </div>
+                                            <a class="btn btn-default btn-block" ng-click="addAnswer('choice', choiceAnswer, $index)">Save</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- photo -->
+                            <div ng-switch-when="photo">
+                                <div class="card">
+                                    <div class="card-header" role="tab" id="heading_[[$index]]">
+                                        <h5 class="mb-[[$index]]">
+                                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse_[[$index]]" aria-expanded="true" aria-controls="collapse_[[$index]]">
+                                                Assignment [[$index+1]]
+                                            </a>
+                                            <span class="pull-right aria-hidden="true" ng-show="answers[$index].index==$index" style="color: #00C853;">
+                                                &#10004;
+                                            </span>
+                                        </h5>
+                                    </div>
+                                    <div id="collapse_[[$index]]" class="collapse" role="tabpanel" aria-labelledby="heading_[[$index]]">
+                                        <div class="card-block">
+                                            <p><b>Objective : </b> <i>[[assignment.question]]</i></p>
+                                            <div class="input-group" style="margin:.5em 0em .5em; width:100%; text-align: center;">
+                                                <button class="btn btn-info btn-block" type="button" data-toggle="modal" data-target=".cameraRoll[[$index]]">Browse</button><br>
+
+                                                <img ng-src="/img/[[answers[$parent.$index].answer]]" style="width: 100%; margin:.5em 0em .5em;">
+                                                
+                                                <!-- <button class="btn btn-default" type="button" ng-click="addAnswer(photoAnswer, $index)">Save</button> -->
+                                            </div>   
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal fade cameraRoll[[$index]]">
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <span class="modal-title">Choose your photo</span>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="container-fluid">
+                                                    <div class="row">
+                                                       <div class="col-sm-4" ng-repeat="photo in photos">
+                                                            <div class="card" data-dismiss="modal" ng-click="addAnswer('photo', photo, $parent.$index)">
+                                                                    <div class="card-img-top">
+                                                                        <img ng-src="/img/[[photo]]" style="width:100%;">
+                                                                    </div>
+                                                                </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>  
+                    </div>
+                    <div style="padding: 1em;">
+                        <button class="btn btn-success btn-block" ng-click="checkAnswer();">Submit Assignments</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <div class="row">
+        <div class="col-sm-12"> 
+            <a ng-href="/users/trip/overview/[[nameUrl]]" class="btn btn-primary btn-block">Back to Overview</a>
+        </div>
+    </div>
+
+
+    <!-- <div class="modal fade bd-example-modal-lg">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title">Choose your photo</span>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-sm-4" ng-repeat="photo in photos">
+                                <div class="card" ng-click="selected(photo)">
+                                    <img class="card-img-top" ng-src="/img/[[photo]]" style="height: 15em;">
+                                </div>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> -->
+
+
+</div>
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/map.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src='http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js'></script>
+<script>
+    var app = angular.module('mapPage', []);
+
+    app.config(function($interpolateProvider) {
+        $interpolateProvider.startSymbol('[[');
+        $interpolateProvider.endSymbol(']]');
+    });
+
+    app.controller("tripCtrl",function($scope,$http,$location,$window){
+        
+        var tripUrl = $('input[name=tripUrl]').val();
+        var placeUrl = $('input[name=placeUrl]').val();
+        var username = $('input[name=username]').val();
+
+        $scope.score = 0;
+        $scope.answers = [];
+        
+        // GET DATA OF THIS TRIP
+        $http.get('/users/data/trip/' + tripUrl).then(function(response){
+            $scope.name = response.data[0].name;
+            $scope.nameUrl = response.data[0].nameUrl;
+            $scope.imgThumbnail = response.data[0].imgThumbnail;
+            $scope.overview = response.data[0].overview;
+            $scope.place = response.data[0].place;
+            $scope.assignments = response.data[0].assignments;
+            
+            // Create Array fit to number of Assignments
+            for(var i = 0; i < $scope.assignments.length; i++) {
+                $scope.answers.push({});
+            }   
+
+            // GET DATA PLACE OF THIS TRIP
+            $http.get('/users/data/place/' + $scope.place).then(function(response){
+                $scope.namePlace = response.data[0].name;
+                $scope.nameUrlPlace = response.data[0].nameUrl;
+                $scope.imgMap = response.data[0].imgMap;
+                $scope.markers = response.data[0].markers;
+            });
+        });
+
+        // GET DATA PHOTO OF USER
+        $http.get('/users/data/photo/' + username).then(function(response){
+            $scope.photos = response.data[0].photos;
+        });
+
+        $scope.addAnswer = function(type, answer, index){
+            $scope.answers.splice(index, 1);
+            $scope.answers.splice(index, 0,{
+                "type":type,
+                "answer":answer.toLowerCase(),
+                "index":index
+            });
+        }
+
+        $scope.send = function(nameScene, imgScene){
+            var scene = String(nameScene[0]);
+            var sceneImg = "http://161.246.38.97:80/img/" + String(imgScene[0]);
+            var data = {scene, sceneImg};
+
+            $http.post('/users/send', data);
+
+            $scope.flashMessage = true;
+            $scope.currentScene = scene;
+        };
+
+        $scope.addReport = function(){
+            var data = {"tripUrl":tripUrl, "answers":$scope.answers, "score":$scope.score};
+            $http.post('/users/addReport', data).success(function () {});
+            $window.location.href = '/users/explore';
+        }
+
+        $scope.checkAnswer = function() {
+            $http.get('/users/data/trip/' + tripUrl).then(function(response){
+                $scope.assignments = response.data[0].assignments;
+
+                for (var i = 0; i < $scope.assignments.length; i++){
+                    if ( $scope.answers[i].type != "photo" && angular.equals($scope.answers[i].answer, $scope.assignments[i].answer) ) {
+                        $scope.score ++;
+                    }
+                    else if(parseInt($scope.answers[i].answer.split("-")[3]) >= $scope.assignments[i].answer[0].xDeg-30 &&
+                            parseInt($scope.answers[i].answer.split("-")[3]) <= $scope.assignments[i].answer[0].xDeg+30 &&
+                            parseInt($scope.answers[i].answer.split("-")[2]) >= $scope.assignments[i].answer[0].yDeg-30 &&
+                            parseInt($scope.answers[i].answer.split("-")[2]) <= $scope.assignments[i].answer[0].yDeg+30 )
+                    { 
+                        $scope.score++;
+                    }
+                }
+                $scope.addReport();
+            });
+        }
+
+
+
+    });
+</script>

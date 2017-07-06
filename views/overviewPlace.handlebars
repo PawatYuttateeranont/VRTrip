@@ -1,0 +1,51 @@
+<div ng-app="overviewPage" ng-controller="overviewCtrl">
+    <!-- Pass URL from Route to Angular -->
+    <input type="radio" name="placeUrl" value="{{placeUrl}}" ng-hide="true">
+
+    <h2 class="page-header">[[name]]</h2>
+    <div class="col-sm-12" style="text-align: center;">
+        <img class="card-img-top" src="/img/[[imgThumbnail]]" style="width: 90%;">
+        <p style="padding: 4em 8em 4em;">[[overview]]</p>
+        <a ng-href="/users/place/[[nameUrl]]" class="btn btn-primary">Go Explore</a>
+    </div>
+    
+
+</div>
+
+
+
+
+
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src='http://ajax.googleapis.com/ajax/libs/angularjs/1.3.2/angular.min.js'></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.2/angular-route.min.js"></script>
+
+
+<script>
+    var app = angular.module('overviewPage', []);
+
+    app.config(function($interpolateProvider) {
+        $interpolateProvider.startSymbol('[[');
+        $interpolateProvider.endSymbol(']]');
+        
+    });
+
+    app.controller("overviewCtrl", function($scope,$http){
+
+        var placeUrl = $('input[name=placeUrl]').val();
+
+        // GET DATA OF THIS TRIP
+        $http.get('/users/data/place/' + placeUrl).then(function(response){
+            $scope.name = response.data[0].name;
+            $scope.nameUrl = response.data[0].nameUrl;
+            $scope.imgThumbnail = response.data[0].imgThumbnail;
+            $scope.imgPlace = response.data[0].imgPlace;
+            $scope.imgMap = response.data[0].imgMap;
+            $scope.overview = response.data[0].overview;
+        });
+    });
+</script>

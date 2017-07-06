@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+	<title>Virtual Filed Trips</title>
+	<link rel="stylesheet" href="/css/bootstrap.css" />
+	<link rel="stylesheet" href="/css/style.css" />
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+    <!-- Angular Material Library -->
+    <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+    <script src='http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js'></script>
+    <!-- jQuery Library -->
+    <!-- <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+</head>
+<body style="padding: 0px; background: url('/img/background.jpg') fixed; background-size: cover;">
+	<div class="container">
+        <!-- <div class="header clearfix">
+            <nav style="margin: 1em;">
+            <ul class="nav nav-pills pull-right">
+                {{#if user}}
+                    <li role="presentation"><a href="/">Dashboard</a></li>
+                    <li role="presentation"><a href="/users/map">Map</a></li>
+                    <li role="presentation"><a href="/users/addQuestion">Add Question</a></li>
+                    <li role="presentation"><a href="/users/question">Question</a></li>
+                    <li role="presentation"><a href="/users/profile">Profile</a></li>
+                    <li role="presentation"><a href="/users/logout">Logout</a></li>
+                {{else}}
+                    <li role="presentation"><a href="/users/login">Login</a></li>
+                    <li role="presentation"><a href="/users/register">Register</a></li>
+                 {{/if}}
+            </ul>
+            </nav>
+            <h3 class="text-muted">Virtual Field Trips</h3>
+        </div> -->
+
+        <nav class="navbar navbar-light" style="background-color: #3F51B5;">
+            <div class="container-fluid">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <a class="navbar-brand" style="color: white;">VRTrip</a>
+                </div>
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">  
+                    <ul class="nav navbar-nav navbar-right">
+                        {{#if user}}
+                            {{#if user.role}}
+                                <!-- <li role="presentation"><a style="color:white;" href="/users/place">Place</a></li> -->
+                                <!-- <li role="presentation"><a style="color:white;" href="/users/trip">Trip</a></li> -->
+                                <li role="presentation"><a style="color:white;" href="/users/explore">Explore</a></li>
+                                <li role="presentation"><a style="color:white;" href="/users/photo/{{user.username}}">Camera Roll</a></li>
+                                <li role="presentation"><a style="color:white;" href="/users/scoreAll">Score</a></li>
+                                <li role="presentation"><a style="color:white;" href="/users/Trip">Trip</a></li>
+                                <li role="presentation"><a style="color:white;" href="/users/addPlace">Add Place</a></li>
+                                <li role="presentation"><a style="color:white;" href="/users/addTrip">Add Trip</a></li>
+                                <li role="presentation"><a style="color:white;" href="/users/addSession">Add Class</a></li>
+                                <li role="presentation"><a style="color:red;"   href="/users/logout">Logout</a></li>
+                            {{else}}
+                                <li role="presentation"><a style="color:white;" href="/users/explore">Explore</a></li>
+                                <li role="presentation"><a style="color:white;" href="/users/photo/{{user.username}}">Camera Roll</a></li>
+                                <li role="presentation"><a style="color:white;" href="/users/score/{{user.username}}">Score</a></li>
+                                <li role="presentation"><a style="color:red;"   href="/users/logout">Logout</a></li>
+                            {{/if}}
+                        {{else}}
+                            <li role="presentation"><a style="color:white;" href="/users/login">Login</a></li>
+                            <li role="presentation"><a style="color:white;" href="/users/register">Register</a></li>
+                        {{/if}}      
+                    </ul>
+                </div><!-- /.navbar-collapse -->
+            </div><!-- /.container-fluid -->
+        </nav>
+
+
+
+
+
+        <div class="row">
+            <div class="col-lg-12">
+                {{#if success_msg}}
+                    <div class="alert alert-success">{{success_msg}}</div>
+                {{/if}}
+        
+                {{#if error_msg}}
+                    <div class="alert alert-danger">{{error_msg}}</div>
+                {{/if}}
+        
+                {{#if error}}
+                    <div class="alert alert-danger">{{error}}</div>
+                {{/if}}
+                
+                {{{body}}}
+            </div> 
+        </div>
+
+        <footer class="footer">
+            <p>&copy; FOOTER, Inc.</p>
+        </footer>
+
+    </div> <!-- /container -->
+
+</body>
+</html>

@@ -1,0 +1,68 @@
+<div ng-app="addPage" ng-controller="addCtrl">
+
+    <h2 class="page-header">Add Class Assignment</h2>
+    
+        <div class="form-group">
+            <label>Class Assignment</label>
+            <input type="text" class="form-control" placeholder="Class Name" ng-model="name"><br>
+            
+            <label>Trip</label>
+            <select class="form-control" ng-model="tripDestination">
+                <option ng-repeat="trip in trips" value="[[trip.nameUrl]]">[[trip.name]]</option>
+            </select><br>
+            <div class="row">
+                <div class="col-sm-6">
+                   <label>Start Class</label>
+                   <input class="form-control" type="date" ng-model="startDate">
+                </div>
+                <div class="col-sm-6">
+                    <label>End Class</label>
+                    <input class="form-control" type="date" ng-model="endDate">
+                </div>
+            </div>
+        </div>   
+        <button type="submit" class="btn btn-primary btn-block" ng-click="addSession()">Submit Session</button>
+</div>
+
+<script>
+    var app = angular.module('addPage', []);
+
+    app.config(function($interpolateProvider) {
+        $interpolateProvider.startSymbol('[[');
+        $interpolateProvider.endSymbol(']]');
+    });
+
+    app.controller("addCtrl",function($scope,$http, $location, $window){
+
+        $scope.name = null;
+        $scope.tripDestination = null;
+        $scope.startDate = null;
+        $scope.endDate = null;
+
+        // GET DATA OF THIS TRIP
+        $http.get('/users/data/trip').then(function(response){
+            $scope.trips = response.data;
+        });
+
+        $scope.addSession = function() {
+            for (i=0; i<$scope.trips.length; i++){
+                if (angular.equals($scope.trips[i].nameUrl, $scope.tripDestination)){
+                    $scope.imgThumbnail = $scope.trips[i].imgThumbnail;
+                }
+            }
+
+            var data = {    
+                            "name":$scope.name,
+                            "nameUrl":$scope.name.replace(/\s+/g, '-').toLowerCase(),
+                            "imgThumbnail":$scope.imgThumbnail,
+                            "trip":$scope.tripDestination,   
+                            "startDate":$scope.startDate,
+                            "endDate":$scope.endDate
+                        };
+            $http.post('/users/addSession', data).then(function(response){
+                console.log('SUBMITED SESSION');
+            }); 
+            $window.location.href = '/users/explore';      
+        };        
+    });
+</script>

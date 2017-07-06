@@ -1,0 +1,18 @@
+<h2 class="page-header">Add Place</h2>
+
+<form enctype="multipart/form-data" method="post" action="/users/addPlace">
+	<div class="form-group">
+    	<label>Place</label>
+    	<input type="text" class="form-control" placeholder="Place Name" name="name"><br>
+        <label>Overview</label>
+        <textarea type="text" class="form-control" rows="5" placeholder="Overview Description" name="overview"></textarea><br>
+        <label>Thumbnail of Place</label>
+        <input type="file" name="imgThumbnail" /><br>
+        <label>Image of Place</label>
+        <input type="file" name="imgPlace" /><br>
+        <label>Map</label>
+        <input type="file" name="imgMap" /><br>
+    </div>
+    
+  	<button type="submit" class="btn btn-default">Add</button>
+</form>

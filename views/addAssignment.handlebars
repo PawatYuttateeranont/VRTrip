@@ -1,0 +1,43 @@
+<h2 class="page-header">Add Assignment</h2>
+
+<form method="post" action="/users/addTrip" ng-app="addPage" ng-controller="addCtrl">
+	<div class="form-group">
+    	<label>Trip</label>
+    	<input type="text" class="form-control" placeholder="Trip Name" name="name"><br>
+        <label>Thumbnail</label>
+        <input type="text" class="form-control" placeholder="Path of Thumbnail" name="imgThumbnail"><br>
+        <label>Overview</label>
+        <textarea type="text" class="form-control" rows="5" placeholder="Overview Description" name="overview"></textarea><br>
+        <label>Place of Trip</label>
+        <select class="form-control" ng-model="placeDestination">
+        	<option ng-repeat="place in places" value="[[place.nameUrl]]">[[place.name]]</option>
+        </select><br>
+        <input type="text" class="form-control" name="place" ng-hide="true" value="[[placeDestination]]">
+    </div>
+    
+  	<button type="submit" class="btn btn-default">Add</button>
+</form>
+
+
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src='http://ajax.googleapis.com/ajax/libs/angularjs/1.3.2/angular.min.js'></script> -->
+<script>
+    var app = angular.module('addPage', []);
+
+    app.config(function($interpolateProvider) {
+        $interpolateProvider.startSymbol('[[');
+        $interpolateProvider.endSymbol(']]');
+    });
+
+    app.controller("addCtrl",function($scope,$http){
+
+        $scope.placeDestination = null;
+
+        // GET DATA OF THIS TRIP
+        $http.get('/users/data/place').then(function(response){
+            $scope.places = response.data;
+        });
+        
+    });
+</script>

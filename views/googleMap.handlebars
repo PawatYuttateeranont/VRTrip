@@ -1,0 +1,60 @@
+<style>
+	html, body { height: 100%; }
+	.angular-google-map-container { height: 100vh; }
+</style>
+
+<div ng-app="myApp" ng-controller="gMap">
+  	<ui-gmap-google-map 
+    	center="map.center"
+    	zoom="map.zoom" aria-label="Google map">
+    
+    	<ui-gmap-marker ng-repeat="marker in markers"
+      	coords="marker.coords" options="marker.options" events="marker.events" idkey="marker.id">
+      		<ui-gmap-window>
+        		<div>{{marker.window.title}}</div>
+      		</ui-gmap-window>
+    	</ui-gmap-marker>
+  	</ui-gmap-google-map>
+</div>
+
+<script src='http://ajax.googleapis.com/ajax/libs/angularjs/1.3.2/angular.min.js'></script>
+<script src='http://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js'></script>
+<script src='http://cdnjs.cloudflare.com/ajax/libs/angular-google-maps/2.0.11/angular-google-maps.js'></script>
+<script src='http://maps.googleapis.com/maps/api/js?key=AIzaSyCPNLZJOdy3OQ-bxaCZQ0_S8iAq05cLe7c&sensor=false'></script>
+<script>
+	var myApp = angular.module('myApp', ['uiGmapgoogle-maps']);
+
+	myApp.factory("Markers", function(){
+  		var Markers = [
+    		{
+    		  "id": "0",
+    		  "coords": {
+    		    "latitude": "45.5200",
+    		    "longitude": "-122.6819"
+    		  },
+    		  "window": {
+    		    "title": "Portland, OR"
+    		  }
+    		},
+    		{
+    		  "id": "1",
+    		  "coords": {
+    		    "latitude": "40.7903",
+    		    "longitude": "-73.9597"
+    		  },
+    		  "window" : {
+    		    "title": "Manhattan New York, NY"
+    		  }
+    		}
+  		];
+  		return Markers;
+	});
+
+	myApp.controller("gMap",function($scope,Markers){
+  		$scope.map = { 
+    		center: { latitude: 13.7244426, longitude: 100.3529064 }, 
+    		zoom: 8
+  		};
+  		$scope.markers = Markers;
+	});
+</script>

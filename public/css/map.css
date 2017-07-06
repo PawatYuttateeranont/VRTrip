@@ -1,0 +1,162 @@
+pin {
+  font-size: 1.5em;
+  margin: 3em;
+}
+
+svg {
+  height: auto;
+  max-width: 100%;
+  z-index: -100;
+  min-width: 300px;
+}
+
+button {
+  padding: 0;
+  margin: 0;
+  background: none;
+  border-width: 0;
+}
+
+.map {
+ 	position: relative;
+}
+.map-markers {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.map-marker {
+  position: absolute;
+}
+
+.map-marker:hover {
+  cursor: hand;
+}
+
+.map-marker:after {
+  animation-duration: 10s;
+  animation-iteration-count: infinite;
+  animation-name: none;
+  border-radius: 50%;
+  border: 1px solid #E63768;
+  content: '';
+  height: 2em;
+  left: 0;
+  margin: -.5em 0 0 -.5em;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  width: 2em;
+}
+.map-marker:hover .map-marker-info {
+  display: block;
+}
+.map-marker-it {
+  left: 90%;
+  top: 10%;
+}
+.map-marker-rama4-monument {
+  left: 60%;
+  top: 12%;
+}
+.map-marker-rama4-monument:after {
+  animation-delay: 3s;
+}
+.map-marker-prathep-building {
+  left: 50%;
+  top: 15%;
+}
+.map-marker-prathep-building:after {
+  animation-delay: 5s;
+}
+.map-marker-info {
+	text-align: center;
+  display: none;
+  left: 50%;
+  position: absolute;
+  bottom: 0;
+  transform: translate(-50%, -2em);
+  width: 20em;
+  z-index: 999;
+}
+.map-marker-info header {
+  background-color: #E63768;
+  border-radius: .5em;
+  color: #fff;
+  padding: .1em;
+}
+.map-marker-info-inner {
+  border-radius: .5em;
+  box-shadow: 0 0 0.25em rgba(0, 0, 0, 0.3);
+  font-size: .875em;
+}
+.map-marker-info-inner:after {
+  border-left: .75em solid transparent;
+  border-right: .75em solid transparent;
+  border-top: 1em solid #E63768;
+  content: '';
+  height: 0;
+  left: 50%;
+  position: absolute;
+  top: 100%;
+  transform: translateX(-50%);
+  width: 0;
+}
+
+.animate {
+  animation-duration: 1s;
+  animation-fill-mode: both;
+}
+
+@keyframes bounce-in {
+  0%, 20%, 40%, 60%, 80%, 100% {
+    transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+  0% {
+    opacity: 0;
+    transform: scale3d(0.3, 0.3, 0.3);
+  }
+  20% {
+    transform: scale3d(1.1, 1.1, 1.1);
+  }
+  40% {
+    transform: scale3d(0.9, 0.9, 0.9);
+  }
+  60% {
+    opacity: 1;
+    transform: scale3d(1.03, 1.03, 1.03);
+  }
+  80% {
+    transform: scale3d(0.97, 0.97, 0.97);
+  }
+  100% {
+    opacity: 1;
+    transform: scale3d(1, 1, 1);
+  }
+}
+.animate-bounce-in {
+  animation-duration: .75s;
+  animation-name: bounce-in;
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(0);
+  }
+  8% {
+    opacity: .4;
+  }
+  10% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+.animate-pop {
+  animation-duration: 1s;
+  animation-name: pop;
+}
+
+#location {
+  font-size: 24px;
+  color: #FFA000;
+}

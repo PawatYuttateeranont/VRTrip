@@ -1,0 +1,64 @@
+<div ng-app="scorePage" ng-controller="scoreCtrl">
+	<h2 class="page-header">Score</h2>
+
+	<input type="radio" name="user" value="{{username}}" ng-hide="true">
+
+	<div style="margin:1em; padding: 1em; background: rgba(255,255,255,.9); border-radius: 5px;">
+		<table class="table">
+		  	<thead>
+		    	<tr>
+		      		<th>Trip</th>
+		      		<th>Score</th>
+		      		<th>Date</th>
+		    	</tr>
+		  	</thead>
+		  	<tbody>
+		    	<tr ng-repeat="report in reports | orderBy:'-date' ">
+		    		<td>[[report.trip]]</td>
+		    		<td>[[report.score]]</td>
+		    		<td>[[report.date | date:'dd/MM/yyyy - HH:mm:ss']]</td>
+		    	</tr>
+		  	</tbody>
+		</table>
+	</div>
+
+
+
+</div>
+
+<script>
+    var app = angular.module('scorePage', []);
+
+    app.config(function($interpolateProvider) {
+        $interpolateProvider.startSymbol('[[');
+        $interpolateProvider.endSymbol(']]');
+    });
+
+    app.controller("scoreCtrl",function($scope,$http,$location){
+        
+        var user = $('input[name=user]').val();
+        $scope.reports = [];
+
+    	// GET DATA OF REPORT OF THIS USER
+        $http.get('/users/data/report/' + user).then(function(response){
+
+        	// LOOP GET DATA IN REPORT
+        	for (var i = 0; i < response.data.length; i++){
+        		$scope.user = response.data[i].user;
+            	$scope.trip = response.data[i].trip;
+            	$scope.score = response.data[i].score;
+            	$scope.date = response.data[i].date;
+            	$scope.reports.push({
+            		"user":$scope.user,
+            		"trip":$scope.trip,
+            		"score":$scope.score,
+            		"date":$scope.date.toString().replace('T', " | ").slice(0,-5)
+            	});
+        	}
+
+        });
+
+
+
+    });
+</script>

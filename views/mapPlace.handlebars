@@ -1,0 +1,69 @@
+<div ng-app="mapPage" ng-controller="placeCtrl">
+    <!-- Pass Trip URL from Route to Angular -->
+    <input type="radio" name="placeUrl" value="{{placeUrl}}" ng-hide="true">
+
+    <h2 class="page-header">[[name]]</h2>
+    <div class="alert alert-info" role="alert" ng-show="flashMessage">
+        <strong>Exploring!</strong> You're in [[currentScene]]
+    </div>
+    <div class="col-sm-12" style="text-align: center;">
+        <div class="row">
+            <svg ng-click="draw($event)" width="636" height="540">
+                <image x="0" y="0" width="100%" height="100%" xlink:href="" ng-href="/img/[[imgMap]]"></image>
+                <g ng-repeat="mark in markers">
+                    <circle id="mark" ng-attr-cx="[[mark.x]]" ng-attr-cy="[[mark.y]]" ng-attr-r="[[mark.r]]" fill="#E91E63" 
+                    ng-click="send([[mark.nameScene]], [[mark.imgScene]])" ng-mouseover="showDesc=true" ng-mouseleave="showDesc=false"></circle>
+                    <rect x="0" y="0" fill="#E91E63" height="40" width="700" ng-show="showDesc"></rect>
+                    <text x="330" y="30" fill="white" text-anchor="middle" font-size="20" ng-show="showDesc">[[mark.name]]</text>                
+                </g>
+            </svg>
+        </div>
+        <div style="margin: 2em 0em;"></div>
+        <a ng-href="/users/place/overview/[[nameUrl]]" class="btn btn-primary">Back to Overview</a>
+    </div>
+
+
+
+</div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+<script src='http://ajax.googleapis.com/ajax/libs/angularjs/1.3.2/angular.min.js'></script>
+<script>
+	var app = angular.module('mapPage', []);
+
+	app.config(function($interpolateProvider) {
+    	$interpolateProvider.startSymbol('[[');
+    	$interpolateProvider.endSymbol(']]');
+  	});
+
+	app.controller("placeCtrl",function($scope,$http){
+        var placeUrl = $('input[name=placeUrl]').val();
+
+        // GET DATA OF THIS TRIP
+        $http.get('/users/data/place/' + placeUrl).then(function(response){
+            $scope.name = response.data[0].name;
+            $scope.nameUrl = response.data[0].nameUrl;
+            $scope.imgThumbnail = response.data[0].imgThumbnail;
+            $scope.imgMap = response.data[0].imgMap;
+            $scope.overview = response.data[0].overview;
+            $scope.markers = response.data[0].markers;
+        });
+
+        $scope.send = function(nameScene, imgScene){
+            var scene = String(nameScene[0]);
+            var sceneImg = "http://161.246.38.97:80/img/" + String(imgScene[0]);
+            var data = {scene, sceneImg};
+
+            $http.post('/users/send', data);
+
+            $scope.flashMessage = true;
+            $scope.currentScene = scene;
+        };
+
+  		
+	});
+</script>
+
+

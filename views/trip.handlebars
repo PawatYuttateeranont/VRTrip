@@ -1,0 +1,43 @@
+<div ng-app="display" ng-controller="displayCtrl">
+
+<h2 class="page-header">Trip</h2>
+    <div class="row">
+        <div class="col-sm-4" ng-repeat="indexTrip in trip">
+            <div class="card">
+                <img class="card-img-top" ng-src="/img/[[indexTrip.imgThumbnail]]" style="height: 15em;">
+                <div class="card-block">
+                    <h3 class="card-title">[[indexTrip.name]]</h3>
+                    <a ng-href="/users/trip/overview/[[indexTrip.nameUrl]]" class="btn btn-primary btn-block">Go Explore</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<script>
+        var app = angular.module("display", []); 
+
+
+    app.config(function($interpolateProvider) {
+        $interpolateProvider.startSymbol('[[');
+        $interpolateProvider.endSymbol(']]');
+    });
+
+    app.controller("displayCtrl", function($scope, $http) {
+        
+        $http.get('/users/data/place').then(function(response){
+            var length = response.data.length;
+            $scope.place = response.data;
+        });
+
+        $http.get('/users/data/trip').then(function(response){
+            var length = response.data.length;
+            $scope.trip = response.data;
+        });
+    
+    });
+</script>

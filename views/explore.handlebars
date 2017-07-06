@@ -1,0 +1,78 @@
+<div ng-app="display" ng-controller="displayCtrl">
+
+    <h2 class="page-header">Class Assignment</h2>
+    <div class="row">
+        <div class="col-sm-4" ng-repeat="indexSession in session" ng-if="compareDate(indexSession.endDate, indexSession.startDate)">
+            <div class="card">
+                <img class="card-img-top" ng-src="/img/[[indexSession.imgThumbnail]]" style="height: 15em;">
+                <div class="card-block">
+                    <h3 class="card-title">[[indexSession.name]]</h3>
+                    <h5 class="card-title">Expire: [[indexSession.endDate | date:'dd/MM/yyyy']]</h5>
+                    <a ng-href="/users/trip/overview/[[indexSession.trip]]" class="btn btn-primary btn-block">Go Explore</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br>
+
+    <h2 class="page-header">Place</h2>
+    <div class="row">
+        <div class="col-sm-4" ng-repeat="indexPlace in place">
+            <div class="card">
+                <img class="card-img-top" ng-src="/img/[[indexPlace.imgThumbnail]]" style="height: 15em;">
+                <div class="card-block">
+                    <h3 class="card-title">[[indexPlace.name]]</h3>
+                    <a ng-href="/users/place/overview/[[indexPlace.nameUrl]]" class="btn btn-primary btn-block">Go Explore</a>
+                </div>
+            </div><br>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+
+<script>
+    var app = angular.module("display", []); 
+
+
+    app.config(function($interpolateProvider) {
+        $interpolateProvider.startSymbol('[[');
+        $interpolateProvider.endSymbol(']]');
+    });
+
+    app.controller("displayCtrl", function($scope, $http) {
+        
+        $scope.nowDate = new Date();
+
+        $http.get('/users/data/place').then(function(response){
+            var length = response.data.length;
+            $scope.place = response.data;
+        });
+
+        $http.get('/users/data/trip').then(function(response){
+            var length = response.data.length;
+            $scope.trip = response.data;
+        });
+
+        $http.get('/users/data/session').then(function(response){
+            var length = response.data.length;
+            $scope.session = response.data;
+        });
+
+
+        $scope.compareDate = function(endDate, startDate){
+            var now = new Date();
+            var end = new Date(endDate);
+            var start = new Date(startDate);
+            if (now<end && now>start) {
+                return true;
+            }
+            // return now<end;
+        }
+
+    });
+</script>

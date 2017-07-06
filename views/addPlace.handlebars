@@ -1,0 +1,146 @@
+<div ng-app="addPage" ng-controller="addCtrl">
+
+    <h2 class="page-header">Add Place</h2>
+    
+    <!-- <form method="post" action="/users/addPlace"> -->
+        <div class="form-group">
+            <label>Place</label>
+            <input type="text" class="form-control" placeholder="Place Name" ng-model="name"><br>
+            <label>Overview</label>
+            <textarea type="text" class="form-control" rows="5" placeholder="Overview Description" ng-model="overview"></textarea><br>
+        
+            <label>Thumbnail of Place</label>
+            <input type="file" ngf-select="uploadThumbnail($file)" ng-model="imgThumbnail" name="imgThumbnail"    
+             accept="image/*" ngf-max-size="50MB" required
+             ngf-model-invalid="errorFile"><br>
+            <div class="progress" ng-show="thumbnail.progress >= 0">
+                <div class="progress-bar bg-success" style="width: [[thumbnail.progress]]%;"
+               ng-bind="thumbnail.progress + '%'"></div>
+            </div>
+
+            <label>Image of Place</label>
+            <input type="file" ngf-select="uploadPlace($file)" ng-model="imgPlace" name="imgPlace"    
+             accept="image/*" ngf-max-size="50MB" required
+             ngf-model-invalid="errorFile"><br>
+             <div class="progress" ng-show="place.progress >= 0">
+                <div class="progress-bar bg-success" style="width: [[place.progress]]%;"
+               ng-bind="place.progress + '%'"></div>
+            </div>
+
+            <label>Map</label>
+            <input type="file" ngf-select="uploadMap($file)" ng-model="imgMap" name="imgMap"    
+             accept="image/*" ngf-max-size="50MB" required
+             ngf-model-invalid="errorFile"><br>
+             <div class="progress" ng-show="map.progress >= 0">
+                <div class="progress-bar bg-success" style="width: [[map.progress]]%;"
+               ng-bind="map.progress + '%'"></div>
+            </div>
+
+        </div>
+
+        <!-- <button class="btn btn-success btn-block" ng-click="uploadImg(imgThumbnail); uploadImg(imgPlace); uploadImg(imgMap);">Upload Images</button> -->
+        <button class="btn btn-primary btn-block" ng-click="addPlace();">Submit Place</button>
+    <!-- </form> -->
+
+
+</div>
+
+<script type="text/javascript" src="http://161.246.38.97:80/node_modules/ng-file-upload/dist/ng-file-upload.min.js"></script>
+<script type="text/javascript" src="http://161.246.38.97:80/node_modules/ng-file-upload/dist/ng-file-upload-shim.min.js"></script>
+<script>
+    var app = angular.module('addPage', ['ngFileUpload']);
+
+    app.config(function($interpolateProvider) {
+        $interpolateProvider.startSymbol('[[');
+        $interpolateProvider.endSymbol(']]');
+    });
+
+    app.controller("addCtrl",function($scope,$http,$location,$window,Upload){
+
+        $scope.name         = null;
+        $scope.nameUrl      = null;
+        $scope.overview     = null;
+        $scope.imgThumbnail = null;
+        $scope.imgPlace     = null;
+        $scope.imgMap       = null;
+
+
+        $scope.addPlace = function() {
+            var data = {    
+                            "name":$scope.name,
+                            "nameUrl":$scope.name.replace(/\s+/g, '-').toLowerCase(),
+                            "overview":$scope.overview,
+                            "imgThumbnail":$('input[name=imgThumbnail]').val().replace(/.*[\/\\]/, ''),
+                            "imgPlace":$('input[name=imgPlace]').val().replace(/.*[\/\\]/, ''),
+                            "imgMap":$('input[name=imgMap]').val().replace(/.*[\/\\]/, '')
+                        };
+            $http.post('/users/addPlace', data).then(function(response){
+                console.log('SUBMITED PLACE');
+            });
+            $window.location.href = '/users/addMarker/'+$scope.name.replace(/\s+/g, '-').toLowerCase();
+        };
+
+        $scope.uploadThumbnail = function(file) {
+            $scope.thumbnail = file;
+            file.upload = Upload.upload({
+                url: '/users/upload',
+                data: {file: file},
+            });
+
+            file.upload.then(function (response) {
+                $timeout(function () {
+                    file.result = response.data;
+                });
+            }, function (response) {
+                if (response.status > 0)
+                $scope.errorMsg = response.status + ': ' + response.data;
+            }, function (evt) {
+                // Math.min is to fix IE which reports 200% sometimes
+                file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+            });
+        };
+
+        $scope.uploadPlace = function(file) {
+            $scope.place = file;
+            file.upload = Upload.upload({
+                url: '/users/upload',
+                data: {file: file},
+            });
+
+            file.upload.then(function (response) {
+                $timeout(function () {
+                    file.result = response.data;
+                });
+            }, function (response) {
+                if (response.status > 0)
+                $scope.errorMsg = response.status + ': ' + response.data;
+            }, function (evt) {
+                // Math.min is to fix IE which reports 200% sometimes
+                file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+            });
+        };
+
+        $scope.uploadMap = function(file) {
+            $scope.map = file;
+            file.upload = Upload.upload({
+                url: '/users/upload',
+                data: {file: file},
+            });
+
+            file.upload.then(function (response) {
+                $timeout(function () {
+                    file.result = response.data;
+                });
+            }, function (response) {
+                if (response.status > 0)
+                $scope.errorMsg = response.status + ': ' + response.data;
+            }, function (evt) {
+                // Math.min is to fix IE which reports 200% sometimes
+                file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+            });
+        };
+
+
+
+    });
+</script>
